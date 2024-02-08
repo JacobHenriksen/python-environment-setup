@@ -102,6 +102,13 @@ def part_two():
 
 def part_three():
 
+    try:
+        print(f'\nUpgrading pip package installer to the latest version..')
+        os.system(f'python.exe -m pip install --upgrade pip')
+    except Exception as e:
+        print(f'Upgrade failed: {e}')
+        return False
+
     # Installing pip libraries
     try:
         print(f'\nInstalling pip libraries from {dependencies_file}..')
