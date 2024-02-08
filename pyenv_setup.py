@@ -2,8 +2,8 @@ import os
 
 # Enter .gitignore entries here:
 gitignore_entries = [
-    'pyenv_setup.py', 
-    '.log'
+    os.path.basename(__file__), 
+    '*.log'
 ]
 dependencies_file = 'dependencies.txt'
 
@@ -43,15 +43,25 @@ def part_one():
         print(f'Step 1 failed: {e}')
         return False
 
-    # Creating .gitignore file and writing this script name to it
+    # Creating .gitignore file
+    print('\nStep 2: Creating .gitignore and writing entries..')
+    existing_entries = []
+    if os.path.exists('.gitignore'):
+        print('Found existing .gitignore file. Attempting to append entries..')
+        with open('.gitignore', 'r') as gitignore:
+            existing_entries = gitignore.read().splitlines()
+
     with open(r'.gitignore', 'a') as gitignore:
-        print('\nStep 2: Creating .gitignore and writing entries..')
         for entry in gitignore_entries:
-            gitignore.write(entry)
+            if entry not in existing_entries:
+                gitignore.write(entry+'\n')
+            else:
+                print(f'Entry {entry} already exists.')
+        
 
     # Creating Python virtual environment
     try:
-        print('Step 3: Creating Python Virtual Environment, please wait...')
+        print('\nStep 3: Creating Python Virtual Environment, please wait...')
         os.system('python -m venv .')
         print('Done.')
     except Exception as e:
