@@ -11,21 +11,24 @@ dependencies_file = 'dependencies.txt'
 def setup_process():
     print('\nThe script will create files in:')
     print(os.getcwd()+'\n')
-    if user_prompt('Do you want to proceed with the setup?[y/n] ') == 'y':
+    if user_prompt('Do you want to proceed with the setup?[Y/n] ') == 'y':
         proceed = part_one()
         print('\nReady to stage and commit the environment.')
-        if user_prompt('Continue?[y/n] ') == 'y' and proceed is True:
+        if user_prompt('Continue?[Y/n] ') == 'y' and proceed is True:
             proceed = part_two()
             print('\nReady to install pip dependencies.')
-            if user_prompt('Continue?[y/n] ') == 'y' and proceed is True:
+            if user_prompt('Continue?[Y/n] ') == 'y' and proceed is True:
                 part_three()
 
 
 def user_prompt(message):
     while True:
         response = input(message).lower()
-        if response in ('y', 'n'):
-            return response
+        if response in ('','y', 'n'):
+            if response in ('', 'y'):
+                return 'y'
+            elif response == 'n':
+                return response
         else:
             print('Please answer with "y" for YES or "n" for NO.')
 
@@ -102,6 +105,7 @@ def part_two():
 
 def part_three():
 
+    # Checking pip version and performing upgrade
     try:
         print(f'\nUpgrading pip package installer to the latest version..')
         os.system(f'python.exe -m pip install --upgrade pip')
@@ -126,9 +130,9 @@ if __name__ == '__main__':
 
     # Asking for user input to enter Python virtual environment
     while True:
-        answer = input('\nDo you want to enter the virtual environment?[y/n] ').lower()
+        answer = input('\nDo you want to enter the virtual environment?[Y/n] ').lower()
 
-        if answer == 'y':
+        if answer in ('','y'):
             os.system('./Scripts/activate')
             break
         elif answer == 'n':
