@@ -12,12 +12,12 @@ def setup_process():
     print('\nThe script will create files in:')
     print(os.getcwd()+'\n')
     if user_prompt('Do you want to proceed with the setup?[y/n] ') == 'y':
-        part_one()
+        proceed = part_one()
         print('\nReady to stage and commit the environment.')
-        if user_prompt('Continue?[y/n] ') == 'y':
-            part_two()
+        if user_prompt('Continue?[y/n] ') == 'y' and proceed is True:
+            proceed = part_two()
             print('\nReady to install pip dependencies.')
-            if user_prompt('Continue?[y/n] ') == 'y':
+            if user_prompt('Continue?[y/n] ') == 'y' and proceed is True:
                 part_three()
 
 
@@ -36,8 +36,9 @@ def part_one():
     try:
         print('\nStep 1: Initializing git repository..')
         os.system('git init')
-    except:
-        print('Step 1 failed')
+    except Exception as e:
+        print(f'Step 1 failed: {e}')
+        return False
 
     # Creating .gitignore file and writing this script name to it
     with open(r'.gitignore', 'a') as gitignore:
@@ -50,23 +51,28 @@ def part_one():
         print('Step 3: Creating Python Virtual Environment, please wait...')
         os.system('python -m venv .')
         print('Done.')
-    except:
-        print('Task 3 failed')
+    except Exception as e:
+        print(f'Step 3 failed: {e}')
+        return False
 
     #
     try:
         print(' ')
         os.system(f'git config --global --add safe.directory "{os.getcwd().replace('\\', '/')}"')
-    except:
-        print('Task 3 failed')
+    except Exception as e:
+        print(f'Step ? failed: {e}')
+        return False
 
     # Setting autocrlf in global config if not set already. 
     # To do: Check OS version
     try:
         print('\nSetting default line endings to autocrlf..')
         os.system('git config --global core.autocrlf true')
-    except:
-        print('Step failed.')
+    except Exception as e:
+        print(f'Step ? failed: {e}')
+        return False
+    else:
+        return True
 
 
 def part_two():
@@ -78,16 +84,20 @@ def part_two():
         os.system('git add .')
         os.system('git config --global core.safecrlf true')             #RE-ENABLING CRLF WARNINGS
         #os.system('git status')                                        #GIT STATUS BEFORE COMMIT
-    except:
-        print('Step 4 failed')
+    except Exception as e:
+        print(f'Step 4 failed: {e}')
+        return False
 
     # Performing initial commit
     try:
         print('Step 5: Performing initial commit..\n')
         os.system('git commit -m "Environment setup."')
         os.system('git status')
-    except:
-        print('Step 5 failed')
+    except Exception as e:
+        print(f'Step 5 failed: {e}')
+        return False
+    else:
+        return True
 
 
 def part_three():
@@ -96,8 +106,11 @@ def part_three():
     try:
         print(f'\nInstalling pip libraries from {dependencies_file}..')
         os.system(f'pip install -r "{dependencies_file}"')
-    except:
-        print('Installation failed')
+    except Exception as e:
+        print(f'Installation failed: {e}')
+        return False
+    else:
+        return True
     
 
 if __name__ == '__main__':
